@@ -33,6 +33,9 @@
     <ClInclude Include="excrypt_des_data.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="excrypt_sha.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="excrypt_aes.c">
@@ -45,6 +48,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="excrypt_des.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="excrypt_sha.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
