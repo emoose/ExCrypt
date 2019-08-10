@@ -134,7 +134,7 @@ void ExCryptAesEcb(const EXCRYPT_AES_STATE* state, const uint8_t* input, uint8_t
   }
 }
 
-void xorWithIv(const uint8_t* input, uint8_t* output, const uint8_t* iv)
+inline void xorWithIv(const uint8_t* input, uint8_t* output, const uint8_t* iv)
 {
   for (uint32_t i = 0; i < AES_BLOCKLEN; i++)
   {
