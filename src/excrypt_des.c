@@ -168,6 +168,7 @@ void ExCryptDes3Key(EXCRYPT_DES3_STATE* state, const uint64_t* keys)
   ExCryptDesKey(&state->des_state[1], (const uint8_t*)& keys[1]);
   ExCryptDesKey(&state->des_state[2], (const uint8_t*)& keys[2]);
 }
+
 void ExCryptDes3Ecb(const EXCRYPT_DES3_STATE* state, const uint8_t* input, uint8_t* output, uint8_t encrypt)
 {
   if (encrypt)
@@ -183,6 +184,7 @@ void ExCryptDes3Ecb(const EXCRYPT_DES3_STATE* state, const uint8_t* input, uint8
     ExCryptDesEcb(&state->des_state[0], output, output, encrypt);
   }
 }
+
 void ExCryptDes3Cbc(const EXCRYPT_DES3_STATE* state, const uint8_t* input, uint32_t input_size, uint8_t* output, uint8_t* feed, uint8_t encrypt)
 {
   uint64_t last_block = *(uint64_t*)feed;
