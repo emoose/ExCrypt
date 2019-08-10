@@ -183,5 +183,3 @@ void ExCryptAesCbc(const EXCRYPT_AES_STATE* state, const uint8_t* input, uint32_
     rijndaelCbcDecrypt((unsigned long*)state->keytabdec, input, input_size, output, feed);
   }
 }
-
-void ExCryptAesCbcEncrypt()
