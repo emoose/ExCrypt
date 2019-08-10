@@ -14,3 +14,6 @@ void ExCryptShaUpdate(EXCRYPT_SHA_STATE* state, const uint8_t* input, uint32_t i
 void ExCryptShaFinal(EXCRYPT_SHA_STATE* state, uint8_t* output, uint32_t output_size);
 void ExCryptSha(const uint8_t* input1, uint32_t input1_size, const uint8_t* input2, uint32_t input2_size,
   const uint8_t* input3, uint32_t input3_size, uint8_t* output, uint32_t output_size);
+
+void ExCryptRotSumSha(const uint8_t* input1, uint32_t input1_size, const uint8_t* input2, uint32_t input2_size,
+  uint8_t* output, uint32_t output_size);
