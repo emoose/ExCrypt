@@ -127,6 +127,7 @@
     <ClInclude Include="excrypt_aes.h" />
     <ClInclude Include="excrypt_des.h" />
     <ClInclude Include="excrypt_des_data.h" />
+    <ClInclude Include="excrypt_parve.h" />
     <ClInclude Include="excrypt_rc4.h" />
     <ClInclude Include="excrypt_rotsum.h" />
     <ClInclude Include="excrypt_sha.h" />
@@ -135,6 +136,7 @@
   <ItemGroup>
     <ClCompile Include="excrypt_aes.c" />
     <ClCompile Include="excrypt_des.c" />
+    <ClCompile Include="excrypt_parve.c" />
     <ClCompile Include="excrypt_rc4.c" />
     <ClCompile Include="excrypt_rotsum.c" />
     <ClCompile Include="excrypt_sha.c" />
