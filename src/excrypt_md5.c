@@ -193,35 +193,6 @@ void ExCryptMd5(const uint8_t* input1, uint32_t input1_size, const uint8_t* inpu
   ExCryptMd5Final(&sha, output, output_size);
 }
 
-void ExCryptRotSumMd5(const uint8_t* input1, uint32_t input1_size, const uint8_t* input2, uint32_t input2_size,
-  uint8_t* output, uint32_t output_size)
-{
-  EXCRYPT_ROTSUM_STATE rotsum;
-  memset(&rotsum, 0, sizeof(EXCRYPT_ROTSUM_STATE));
-
-  ExCryptRotSum(&rotsum, (const uint64_t*)input1, input1_size / 8);
-  ExCryptRotSum(&rotsum, (const uint64_t*)input2, input2_size / 8);
-
-  EXCRYPT_MD5_STATE sha;
-  ExCryptMd5Init(&sha);
-
-  ExCryptMd5Update(&sha, (const uint8_t*)& rotsum, sizeof(EXCRYPT_ROTSUM_STATE));
-  ExCryptMd5Update(&sha, (const uint8_t*)& rotsum, sizeof(EXCRYPT_ROTSUM_STATE));
-
-  ExCryptMd5Update(&sha, input1, input1_size);
-  ExCryptMd5Update(&sha, input2, input2_size);
-
-  rotsum.data[0] = ~rotsum.data[0];
-  rotsum.data[1] = ~rotsum.data[1];
-  rotsum.data[2] = ~rotsum.data[2];
-  rotsum.data[3] = ~rotsum.data[3];
-
-  ExCryptMd5Update(&sha, (const uint8_t*)& rotsum, sizeof(EXCRYPT_ROTSUM_STATE));
-  ExCryptMd5Update(&sha, (const uint8_t*)& rotsum, sizeof(EXCRYPT_ROTSUM_STATE));
-
-  ExCryptMd5Final(&sha, output, output_size);
-}
-
 void ExCryptHmacMd5Init(EXCRYPT_HMACMD5_STATE* state, const uint8_t* key, uint32_t key_size)
 {
   ExCryptMd5Init(&state->Md5State[0]);
