@@ -16,6 +16,7 @@ extern "C" {
 #define ROTL64(data, bits) (((data) << (bits)) | ((data) >> (64 - (bits))))
 
 #include "excrypt_aes.h"
+#include "excrypt_bn.h"
 #include "excrypt_des.h"
 #include "excrypt_md5.h"
 #include "excrypt_parve.h"

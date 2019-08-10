@@ -45,6 +45,9 @@
     <ClInclude Include="excrypt_md5.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="excrypt_bn.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="excrypt_aes.c">
@@ -69,6 +72,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="excrypt_md5.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="excrypt_bn.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
