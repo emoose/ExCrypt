@@ -18,6 +18,7 @@ extern "C" {
 #include "excrypt_aes.h"
 #include "excrypt_des.h"
 #include "excrypt_rc4.h"
+#include "excrypt_rotsum.h"
 #include "excrypt_sha.h"
 
 #ifdef __cplusplus
