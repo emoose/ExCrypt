@@ -179,3 +179,77 @@ void ExCryptRotSumSha(const uint8_t* input1, uint32_t input1_size, const uint8_t
 
   ExCryptShaFinal(&sha, output, output_size);
 }
+
+void ExCryptHmacShaInit(EXCRYPT_HMACSHA_STATE* state, const uint8_t* key, uint32_t key_size)
+{
+  ExCryptShaInit(&state->ShaState[0]);
+  ExCryptShaInit(&state->ShaState[1]);
+
+  if (key_size > 64)
+  {
+    key_size = 64;
+  }
+
+  uint32_t buf1[0x10];
+  uint32_t buf2[0x10];
+  memset(buf1, 0, 0x10 * 4);
+  memset(buf2, 0, 0x10 * 4);
+
+  memcpy(buf1, key, key_size);
+  memcpy(buf2, key, key_size);
+
+  for (int i = 0; i < 16; i++)
+  {
+    buf1[i] ^= 0x36363636;
+    buf2[i] ^= 0x5C5C5C5C;
+  }
+
+  ExCryptShaUpdate(&state->ShaState[0], (const uint8_t*)buf1, 0x40);
+  ExCryptShaUpdate(&state->ShaState[1], (const uint8_t*)buf2, 0x40);
+}
+
+void ExCryptHmacShaUpdate(EXCRYPT_HMACSHA_STATE* state, const uint8_t* input, uint32_t input_size)
+{
+  ExCryptShaUpdate(&state->ShaState[0], input, input_size);
+}
+
+void ExCryptHmacShaFinal(EXCRYPT_HMACSHA_STATE* state, uint8_t* output, uint32_t output_size)
+{
+  ExCryptShaFinal(&state->ShaState[0], 0, 0);
+
+  // updates second SHA1 state with result from first SHA1
+  ExCryptShaUpdate(&state->ShaState[1], (const uint8_t*)state->ShaState[0].state, 0x14);
+
+  ExCryptShaFinal(&state->ShaState[1], output, output_size);
+}
+
+void ExCryptHmacSha(const uint8_t* key, uint32_t key_size, const uint8_t* input1, uint32_t input1_size, const uint8_t* input2, uint32_t input2_size,
+  const uint8_t* input3, uint32_t input3_size, uint8_t* output, uint32_t output_size)
+{
+  EXCRYPT_HMACSHA_STATE hmacsha;
+  ExCryptHmacShaInit(&hmacsha, key, key_size);
+
+  if (input1)
+  {
+    ExCryptHmacShaUpdate(&hmacsha, input1, input1_size);
+  }
+  if (input2)
+  {
+    ExCryptHmacShaUpdate(&hmacsha, input2, input2_size);
+  }
+  if (input3)
+  {
+    ExCryptHmacShaUpdate(&hmacsha, input3, input3_size);
+  }
+
+  ExCryptHmacShaFinal(&hmacsha, output, output_size);
+}
+
+uint8_t ExCryptHmacShaVerify(const uint8_t* key, uint32_t key_size, const uint8_t* input1, uint32_t input1_size, const uint8_t* input2, uint32_t input2_size,
+  const uint8_t* input3, uint32_t input3_size, const uint8_t* compare_buf, uint32_t compare_buf_size)
+{
+  uint8_t output[0x14];
+  ExCryptHmacSha(key, key_size, input1, input1_size, input2, input2_size, input3, input3_size, output, 0x14);
+
+  return compare_buf_size <= 0x14 && !memcmp(output, compare_buf, compare_buf_size);
+}
