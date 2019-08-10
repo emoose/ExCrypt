@@ -7,6 +7,7 @@ typedef struct _EXCRYPT_SHA_STATE
   uint32_t state[5];
   uint8_t buffer[64];
 } EXCRYPT_SHA_STATE;
+static_assert(sizeof(EXCRYPT_SHA_STATE) == 0x58, "sizeof(EXCRYPT_SHA_STATE) != 0x58");
 
 void ExCryptShaInit(EXCRYPT_SHA_STATE* state);
 void ExCryptShaUpdate(EXCRYPT_SHA_STATE* state, const uint8_t* input, uint32_t input_size);
