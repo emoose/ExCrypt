@@ -803,9 +803,9 @@ int rijndaelSetupDecrypt(u32* rk, const u8* key, int keybits)
   u32 temp;
 
   /* expand the cipher key: */
-  // emoose: we copy this in XenCryptAesKey
+  // emoose: we copy this in ExCryptAesKey
   // nrounds = rijndaelSetupEncrypt(rk, key, keybits);
-  nrounds = 10;
+  nrounds = ((keybits / 8) >> 2) + 6;
   /* invert the order of the round keys: */
   for (i = 0, j = 4 * nrounds; i < j; i += 4, j -= 4)
   {
