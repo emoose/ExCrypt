@@ -27,19 +27,19 @@ void ExCryptParveEcb(const uint8_t* key, const uint8_t* sbox, const uint8_t* inp
 
 void ExCryptParveCbcMac(const uint8_t* key, const uint8_t* sbox, const uint8_t* iv, const uint8_t* input, uint32_t input_size, uint8_t* output)
 {
-  uint8_t block[8];
-  memcpy(block, iv, 8);
+  uint64_t block;
+  memcpy(&block, iv, 8);
 
   if (input_size >= 8)
   {
     for (uint32_t i = 0; i < input_size / 8; i++)
     {
-      *(uint64_t*)block ^= *(uint64_t*)&input[i * 8];
-      ExCryptParveEcb(key, sbox, block, block);
+      block ^= *(uint64_t*)&input[i * 8];
+      ExCryptParveEcb(key, sbox, &block, &block);
     }
   }
 
-  memcpy(output, block, 8);
+  memcpy(output, &block, 8);
 }
 
 void ExCryptChainAndSumMac(const uint32_t* cd, const uint32_t* ab, const uint32_t* input, uint32_t input_dwords, uint32_t* output)
@@ -47,25 +47,21 @@ void ExCryptChainAndSumMac(const uint32_t* cd, const uint32_t* ab, const uint32_
   uint64_t out0 = 0;
   uint64_t out1 = 0;
 
-  uint32_t ab0 = _byteswap_ulong(ab[0]) % 0x7FFFFFFF;
-  uint32_t ab1 = _byteswap_ulong(ab[1]) % 0x7FFFFFFF;
-  uint32_t cd0 = _byteswap_ulong(cd[0]) % 0x7FFFFFFF;
-  uint32_t cd1 = _byteswap_ulong(cd[1]) % 0x7FFFFFFF;
+  uint32_t ab0 = ab[0] % 0x7FFFFFFF;
+  uint32_t ab1 = ab[1] % 0x7FFFFFFF;
+  uint32_t cd0 = cd[0] % 0x7FFFFFFF;
+  uint32_t cd1 = cd[1] % 0x7FFFFFFF;
 
   for (uint32_t i = 0; i < input_dwords / 2; i++)
   {
-    out0 += (uint64_t)_byteswap_ulong(input[0]) * 0xE79A9C1;
+    out0 += (uint64_t)input[0] * 0xE79A9C1;
     out0 = (out0 % 0x7FFFFFFF) * ab0;
     out0 += ab1;
     out0 = out0 % 0x7FFFFFFF;
 
-    //out1 += out0;
+    out1 += out0;
 
-    out0 += (uint64_t)_byteswap_ulong(input[1]);
-    out0 = (out0 % 0x7FFFFFFF) + cd1;
-    out0 = out0 * cd0;
-
-    //out0 = (uint64_t)_byteswap_ulong(input[1]) * cd0;
+    out0 = (uint64_t)(input[1] + out0) * cd0;
     out0 = (out0 % 0x7FFFFFFF) + cd1;
     out0 = out0 % 0x7FFFFFFF;
 
@@ -74,6 +70,6 @@ void ExCryptChainAndSumMac(const uint32_t* cd, const uint32_t* ab, const uint32_
     input += 2;
   }
 
-  output[0] = _byteswap_ulong((out0 + ab1) % 0x7FFFFFFF);
-  output[1] = _byteswap_ulong((out1 + cd1) % 0x7FFFFFFF);
+  output[0] = (out0 + ab1) % 0x7FFFFFFF;
+  output[1] = (out1 + cd1) % 0x7FFFFFFF;
 }
