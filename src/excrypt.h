@@ -16,6 +16,7 @@ extern "C" {
 #define ROTL64(data, bits) (((data) << (bits)) | ((data) >> (64 - (bits))))
 
 #include "excrypt_aes.h"
+#include "excrypt_rc4.h"
 
 #ifdef __cplusplus
 }

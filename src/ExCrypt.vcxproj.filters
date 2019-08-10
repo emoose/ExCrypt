@@ -24,12 +24,18 @@
     <ClInclude Include="excrypt_aes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="excrypt_rc4.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="excrypt_aes.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="rijndael.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="excrypt_rc4.c">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

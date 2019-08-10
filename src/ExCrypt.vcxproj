@@ -125,10 +125,12 @@
   <ItemGroup>
     <ClInclude Include="excrypt.h" />
     <ClInclude Include="excrypt_aes.h" />
+    <ClInclude Include="excrypt_rc4.h" />
     <ClInclude Include="rijndael.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="excrypt_aes.c" />
+    <ClCompile Include="excrypt_rc4.c" />
     <ClCompile Include="rijndael.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
