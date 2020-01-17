@@ -25,3 +25,5 @@ Code is expected to be receiving big-endian data, converting that data to little
 Some effort to make the code a bit more readable, rather than just a straight assembly-to-C conversion, would be appreciated (though isn't exactly mandatory, so long as the code actually works)
 
 We only target x86 & x64 - maybe other platforms in the future, but for now there's not much use in supporting anything else.
+
+Where possible, making use of existing, well-known crypto code is always preferrable to needing to write your own (unless some XeCrypt oddity somehow prevents it, that is)
