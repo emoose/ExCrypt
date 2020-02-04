@@ -129,17 +129,23 @@
     <ClInclude Include="excrypt_des.h" />
     <ClInclude Include="excrypt_des_data.h" />
     <ClInclude Include="excrypt_md5.h" />
+    <ClInclude Include="excrypt_mem.h" />
     <ClInclude Include="excrypt_parve.h" />
     <ClInclude Include="excrypt_rc4.h" />
     <ClInclude Include="excrypt_rotsum.h" />
     <ClInclude Include="excrypt_sha.h" />
+    <ClInclude Include="fp61.hpp" />
     <ClInclude Include="rijndael.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="excrypt_aes.c" />
     <ClCompile Include="excrypt_bn.c" />
+    <ClCompile Include="excrypt_bn_key.cpp" />
+    <ClCompile Include="excrypt_bn_mod.cpp" />
+    <ClCompile Include="excrypt_bn_sig.c" />
     <ClCompile Include="excrypt_des.c" />
     <ClCompile Include="excrypt_md5.c" />
+    <ClCompile Include="excrypt_mem.cpp" />
     <ClCompile Include="excrypt_parve.c" />
     <ClCompile Include="excrypt_rc4.c" />
     <ClCompile Include="excrypt_rotsum.c" />

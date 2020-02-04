@@ -74,21 +74,3 @@ void ExCryptBnQw_SwapDwQwLeBe(const uint64_t* source, uint64_t* dest, uint32_t n
     dest_dw += 2;
   }
 }
-
-uint64_t ExCryptBnQwNeModInv(uint64_t input)
-{
-  // Compute the 2-adic of qw such that: val = -1 + input^2
-  uint64_t val = (input * 3) ^ 2;
-  input = 1 - (val * input);
-
-  // Raise it to another 32 such that: val = -1 + input^64
-  for (uint32_t i = 5; i < 32; i <<= 1)
-  {
-    val = val * (input + 1);
-    input = input * input;
-  }
-
-  // Done
-  val = val * (input + 1);
-  return val;
-}

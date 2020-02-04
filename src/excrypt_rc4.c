@@ -10,7 +10,7 @@ void ExCryptRc4Key(EXCRYPT_RC4_STATE* state, const uint8_t* key, uint32_t key_si
 
   uint32_t idx = 0;
   for (uint32_t x = 0; x < 0x100; x++) {
-    idx = (idx + state->S[x] + key[x % 0x10]) % 0x100;
+    idx = (idx + state->S[x] + key[x % key_size]) % 0x100;
     uint8_t temp = state->S[idx];
     state->S[idx] = state->S[x];
     state->S[x] = temp;

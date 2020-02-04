@@ -48,6 +48,12 @@
     <ClInclude Include="excrypt_bn.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="fp61.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="excrypt_mem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="excrypt_aes.c">
@@ -75,6 +81,18 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="excrypt_bn.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="excrypt_bn_mod.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="excrypt_bn_sig.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="excrypt_bn_key.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="excrypt_mem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
