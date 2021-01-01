@@ -11,6 +11,8 @@ void ExCryptBnQw_SwapLeBe(const uint64_t* source, uint64_t* dest, uint32_t num_q
 void ExCryptBnQw_SwapDwQw(const uint64_t* source, uint64_t* dest, uint32_t num_qwords);
 void ExCryptBnQw_SwapDwQwLeBe(const uint64_t* source, uint64_t* dest, uint32_t num_qwords);
 
+int32_t ExCryptBnQwNeCompare(const uint64_t* input1, const uint64_t* input2, uint32_t num_qwords);
+
 // excrypt_bn_mod.cpp
 void ExCryptBnQwNeModMul(const uint64_t* input_A, const uint64_t* input_B, uint64_t* output_C, uint64_t inverse, const uint64_t* modulus, uint32_t modulus_size);
 uint64_t ExCryptBnQwNeModInv(uint64_t input);
