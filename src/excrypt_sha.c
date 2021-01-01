@@ -135,15 +135,15 @@ void ExCryptSha(const uint8_t* input1, uint32_t input1_size, const uint8_t* inpu
   EXCRYPT_SHA_STATE sha;
   ExCryptShaInit(&sha);
 
-  if (input1)
+  if (input1 && input1_size)
   {
     ExCryptShaUpdate(&sha, input1, input1_size);
   }
-  if (input2)
+  if (input2 && input2_size)
   {
     ExCryptShaUpdate(&sha, input2, input2_size);
   }
-  if (input3)
+  if (input3 && input3_size)
   {
     ExCryptShaUpdate(&sha, input3, input3_size);
   }
