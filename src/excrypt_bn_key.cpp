@@ -22,7 +22,7 @@ void ExCryptBn_BeToLeKey(EXCRYPT_RSA* key, const uint8_t* input, uint32_t input_
   EXCRYPT_RSAPUB_1024* key_pub = (EXCRYPT_RSAPUB_1024*)key;
   ExCryptBnQw_SwapDwQwLeBe((uint64_t*)input, key_pub->modulus, key->num_digits);
 
-  int modulus_size = input_size_mul * 0x80;
+  uint32_t modulus_size = input_size_mul * 0x80;
   input += modulus_size;
 
   if (input_size <= (modulus_size + 0x10))

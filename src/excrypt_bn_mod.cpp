@@ -28,7 +28,7 @@ void ExCryptBnQwNeModMul(const uint64_t* input_A, const uint64_t* input_B, uint6
 
   int index = 8; // "0x58" ??
 
-  for (int a = 0; a < modulus_size; a++)
+  for (uint32_t a = 0; a < modulus_size; a++)
   {
     // reset index
     index = 8;
@@ -43,7 +43,7 @@ void ExCryptBnQwNeModMul(const uint64_t* input_A, const uint64_t* input_B, uint6
     r14 = 0;
     r15 = 0;
 
-    for (int b = 0; b < modulus_size; b++)
+    for (uint32_t b = 0; b < modulus_size; b++)
     {
       r16 = input_A[b];
       CAT_MUL128(r17, throwaway, r11, r16);
@@ -84,8 +84,9 @@ void ExCryptBnQwNeModMul(const uint64_t* input_A, const uint64_t* input_B, uint6
   r15 = 0;
 
   // Loop that updates r16 & r17 for later use..
-  index = ROTL64(modulus_size, 3) & 0xFFFFFFFFFFFFFFF8;
-  for (int c = 0; c < modulus_size; c++)
+  uint64_t big_modulus_size = modulus_size;
+  index = ROTL64(big_modulus_size, 3) & 0xFFFFFFFFFFFFFFF8;
+  for (uint32_t c = 0; c < modulus_size; c++)
   {
     r16 = *(uint64_t*)(buffer + index);
     r17 = *(uint64_t*)(buffer + index + 0x108);
@@ -99,7 +100,7 @@ void ExCryptBnQwNeModMul(const uint64_t* input_A, const uint64_t* input_B, uint6
 
   if (r16 > r17)
   {
-    for (int c = 0; c < modulus_size; c++)
+    for (uint32_t c = 0; c < modulus_size; c++)
     {
       r16 = *(uint64_t*)(buffer + index);
       r17 = *(uint64_t*)(buffer + index + 0x108);
@@ -118,7 +119,7 @@ void ExCryptBnQwNeModMul(const uint64_t* input_A, const uint64_t* input_B, uint6
   }
   else
   {
-    for (int c = 0; c < modulus_size; c++)
+    for (uint32_t c = 0; c < modulus_size; c++)
     {
       r16 = *(uint64_t*)(buffer + index);
       r17 = *(uint64_t*)(buffer + index + 0x108);
