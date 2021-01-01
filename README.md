@@ -2,7 +2,7 @@
 
 ExCrypt is an open-source drop-in replacement for the XeCrypt suite of functions used by the Xbox 360.
 
-It's been designed to be as closely compatible to those functions as possible - perhaps at the expense of various security & performance considerations.
+It's been designed to be as closely compatible to those functions as possible - perhaps at the expense of various security & performance concerns.
 
 As such, it should only be used where compatibility with existing Xbox 360 code/data is required. 
 
@@ -12,7 +12,7 @@ The goal of ExCrypt is to implement XeCrypt functions known to be used on the Xb
 
 We only target XeCrypt functions that are exported from the kernel, used during X360 boot, or included inside a game/app.
 
-For a list of XeCrypt targets, their status, and any implementation-specific notes, take a look at [TODO.md](TODO.md).
+For a list of XeCrypt targets, their status, and any implementation-specific notes, take a look at the [implementation status page](https://github.com/emoose/ExCrypt/issues/5).
 
 ### Implementation
 
