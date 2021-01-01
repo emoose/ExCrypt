@@ -20,6 +20,7 @@ typedef int BOOL;
 #include "excrypt_aes.h"
 #include "excrypt_bn.h"
 #include "excrypt_des.h"
+#include "excrypt_ecc.h"
 #include "excrypt_md5.h"
 #include "excrypt_mem.h"
 #include "excrypt_parve.h"
