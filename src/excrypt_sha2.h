@@ -92,6 +92,7 @@ extern "C"
   void ExCryptSha512(const uint8_t* input1, uint32_t input1_size, const uint8_t* input2, uint32_t input2_size,
     const uint8_t* input3, uint32_t input3_size, uint8_t* output, uint32_t output_size);
 
+  void ExCryptSha224Init(EXCRYPT_SHA256_STATE* state);
 #if defined(__cplusplus)
 }
 #endif

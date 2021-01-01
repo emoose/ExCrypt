@@ -337,8 +337,6 @@ void ExCryptSha256Update(EXCRYPT_SHA256_STATE* state, const uint8_t* input, uint
   }
 }
 
-/* SHA256 Final padding and digest calculation  */
-
 const uint32_t i256[8] =
 {
     0x6a09e667ul, 0xbb67ae85ul, 0x3c6ef372ul, 0xa54ff53aul,
@@ -351,6 +349,7 @@ void ExCryptSha256Init(EXCRYPT_SHA256_STATE* state)
   memcpy(state->hash, i256, sizeof(state->hash));
 }
 
+/* SHA256 Final padding and digest calculation  */
 void ExCryptSha256Final(EXCRYPT_SHA256_STATE* state, uint8_t* output, uint32_t output_size)
 {
   uint32_t    i = (uint32_t)((state->count >> 3) & SHA256_MASK), m1;
@@ -706,4 +705,16 @@ void ExCryptSha512(const uint8_t* input1, uint32_t input1_size, const uint8_t* i
     ExCryptSha512Update(state, input3, input3_size);
   }
   ExCryptSha512Final(state, output, output_size);
+}
+
+const uint32_t i224[8] =
+{
+    0xc1059ed8ul, 0x367cd507ul, 0x3070dd17ul, 0xf70e5939ul,
+    0xffc00b31ul, 0x68581511ul, 0x64f98fa7ul, 0xbefa4fa4ul
+};
+
+void ExCryptSha224Init(EXCRYPT_SHA256_STATE* state)
+{
+  memset(state, 0, sizeof(EXCRYPT_SHA256_STATE));
+  memcpy(state->hash, i224, sizeof(state->hash));
 }
