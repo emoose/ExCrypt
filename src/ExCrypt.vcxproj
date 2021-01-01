@@ -144,6 +144,7 @@
     <ClCompile Include="excrypt_bn.c" />
     <ClCompile Include="excrypt_bn_key.cpp" />
     <ClCompile Include="excrypt_bn_mod.cpp" />
+    <ClCompile Include="excrypt_bn_rsa.cpp" />
     <ClCompile Include="excrypt_bn_sig.c" />
     <ClCompile Include="excrypt_des.c" />
     <ClCompile Include="excrypt_ecc.c" />

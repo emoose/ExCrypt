@@ -62,6 +62,7 @@ void ExCryptBnQw_SwapDwQw(const uint64_t* source, uint64_t* dest, uint32_t num_q
 // Endian-swaps & swaps around the two DWORDs inside a QWORD
 void ExCryptBnQw_SwapDwQwLeBe(const uint64_t* source, uint64_t* dest, uint32_t num_qwords)
 {
+#ifdef OLD_CODE
   const uint32_t* source_dw = (const uint32_t*)source;
   uint32_t* dest_dw = (uint32_t*)dest;
   for (uint32_t i = 0; i < num_qwords; i++)
@@ -73,6 +74,12 @@ void ExCryptBnQw_SwapDwQwLeBe(const uint64_t* source, uint64_t* dest, uint32_t n
     source_dw += 2;
     dest_dw += 2;
   }
+#else
+  for (uint32_t i = 0; i < num_qwords; i++)
+  {
+    dest[i] = _byteswap_uint64(source[i]);
+  }
+#endif
 }
 
 int32_t ExCryptBnQwNeCompare(const uint64_t* input1, const uint64_t* input2, uint32_t num_qwords)

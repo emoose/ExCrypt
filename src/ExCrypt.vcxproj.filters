@@ -107,5 +107,8 @@
     <ClCompile Include="excrypt_ecc.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="excrypt_bn_rsa.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
