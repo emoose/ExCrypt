@@ -126,29 +126,29 @@ void ExCryptShaFinal(EXCRYPT_SHA_STATE* state, uint8_t* output, uint32_t output_
   result[2] = _byteswap_ulong(state->state[2]);
   result[3] = _byteswap_ulong(state->state[3]);
   result[4] = _byteswap_ulong(state->state[4]);
-  memcpy(output, result, output_size);
+  memcpy(output, result, min(output_size, 0x14));
 }
 
 void ExCryptSha(const uint8_t* input1, uint32_t input1_size, const uint8_t* input2, uint32_t input2_size,
   const uint8_t* input3, uint32_t input3_size, uint8_t* output, uint32_t output_size)
 {
-  EXCRYPT_SHA_STATE sha;
-  ExCryptShaInit(&sha);
+  EXCRYPT_SHA_STATE state[1];
+  ExCryptShaInit(state);
 
   if (input1 && input1_size)
   {
-    ExCryptShaUpdate(&sha, input1, input1_size);
+    ExCryptShaUpdate(state, input1, input1_size);
   }
   if (input2 && input2_size)
   {
-    ExCryptShaUpdate(&sha, input2, input2_size);
+    ExCryptShaUpdate(state, input2, input2_size);
   }
   if (input3 && input3_size)
   {
-    ExCryptShaUpdate(&sha, input3, input3_size);
+    ExCryptShaUpdate(state, input3, input3_size);
   }
 
-  ExCryptShaFinal(&sha, output, output_size);
+  ExCryptShaFinal(state, output, output_size);
 }
 
 void ExCryptRotSumSha(const uint8_t* input1, uint32_t input1_size, const uint8_t* input2, uint32_t input2_size,

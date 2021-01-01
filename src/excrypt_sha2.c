@@ -391,25 +391,29 @@ void ExCryptSha256Final(EXCRYPT_SHA256_STATE* state, uint8_t* output, uint32_t o
 
   /* extract the hash value as bytes in case the hash buffer is   */
   /* misaligned for 32-bit words                                  */
-  for (i = 0; i < output_size; ++i)
+  for (i = 0; i < min(output_size, 0x20); ++i)
     output[i] = ((state->hash[i >> 2] >> (8 * (~i & 3))) & 0xff);
 }
 
 void ExCryptSha256(const uint8_t* input1, uint32_t input1_size, const uint8_t* input2, uint32_t input2_size,
   const uint8_t* input3, uint32_t input3_size, uint8_t* output, uint32_t output_size)
 {
-  EXCRYPT_SHA256_STATE  state[1];
-
+  EXCRYPT_SHA256_STATE state[1];
   ExCryptSha256Init(state);
-  if (input1 && input1_size) {
+
+  if (input1 && input1_size)
+  {
     ExCryptSha256Update(state, input1, input1_size);
   }
-  if (input2 && input2_size) {
+  if (input2 && input2_size)
+  {
     ExCryptSha256Update(state, input2, input2_size);
   }
-  if (input3 && input3_size) {
+  if (input3 && input3_size)
+  {
     ExCryptSha256Update(state, input3, input3_size);
   }
+
   ExCryptSha256Final(state, output, output_size);
 }
 
@@ -612,18 +616,22 @@ void ExCryptSha384Final(EXCRYPT_SHA384_STATE* state, uint8_t* output, uint32_t o
 void ExCryptSha384(const uint8_t* input1, uint32_t input1_size, const uint8_t* input2, uint32_t input2_size,
   const uint8_t* input3, uint32_t input3_size, uint8_t* output, uint32_t output_size)
 {
-  EXCRYPT_SHA384_STATE  state[1];
-
+  EXCRYPT_SHA384_STATE state[1];
   ExCryptSha384Init(state);
-  if (input1 && input1_size) {
+
+  if (input1 && input1_size)
+  {
     ExCryptSha384Update(state, input1, input1_size);
   }
-  if (input2 && input2_size) {
+  if (input2 && input2_size)
+  {
     ExCryptSha384Update(state, input2, input2_size);
   }
-  if (input3 && input3_size) {
+  if (input3 && input3_size)
+  {
     ExCryptSha384Update(state, input3, input3_size);
   }
+
   ExCryptSha512Final(state, output, output_size);
 }
 
@@ -685,25 +693,29 @@ void ExCryptSha512Final(EXCRYPT_SHA512_STATE* state, uint8_t* output, uint32_t o
 
   /* extract the hash value as bytes in case the hash buffer is   */
   /* misaligned for 32-bit words                                  */
-  for (i = 0; i < output_size; ++i)
+  for (i = 0; i < min(output_size, 0x40); ++i)
     output[i] = ((state->hash[i >> 3] >> (8 * (~i & 7))) & 0xff);
 }
 
 void ExCryptSha512(const uint8_t* input1, uint32_t input1_size, const uint8_t* input2, uint32_t input2_size,
   const uint8_t* input3, uint32_t input3_size, uint8_t* output, uint32_t output_size)
 {
-  EXCRYPT_SHA512_STATE  state[1];
-
+  EXCRYPT_SHA512_STATE state[1];
   ExCryptSha512Init(state);
-  if (input1 && input1_size) {
+
+  if (input1 && input1_size)
+  {
     ExCryptSha512Update(state, input1, input1_size);
   }
-  if (input2 && input2_size) {
+  if (input2 && input2_size)
+  {
     ExCryptSha512Update(state, input2, input2_size);
   }
-  if (input3 && input3_size) {
+  if (input3 && input3_size)
+  {
     ExCryptSha512Update(state, input3, input3_size);
   }
+
   ExCryptSha512Final(state, output, output_size);
 }
 
