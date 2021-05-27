@@ -92,21 +92,24 @@ void ExCryptShaFinal(EXCRYPT_SHA_STATE* state, uint8_t* output, uint32_t output_
   uint64_t bit_count = (uint64_t)state->count * 8;
 
   sha1_process_byte(state, 0x80);
-  if ((state->count & 0x3F) < 56)
-  {
-    while ((state->count & 0x3F) < 56)
-    {
-      sha1_process_byte(state, 0);
-    }
-  }
-  else if ((state->count & 0x3F) >= 56)
+
+  if ((state->count & 0x3F) > 56)
   {
     while ((state->count & 0x3F) != 0)
     {
       sha1_process_byte(state, 0);
     }
-    sha1_process_block(state);
-    memset(state->buffer, 0, 56);
+    while ((state->count & 0x3F) < 56)
+    {
+      sha1_process_byte(state, 0);
+    }
+  }
+  else
+  {
+    while ((state->count & 0x3F) < 56)
+    {
+      sha1_process_byte(state, 0);
+    }
   }
 
   sha1_process_byte(state, 0);
