@@ -151,6 +151,7 @@
     <ClCompile Include="excrypt_md5.c" />
     <ClCompile Include="excrypt_mem.cpp" />
     <ClCompile Include="excrypt_parve.c" />
+    <ClCompile Include="excrypt_bn_pkcs1.cpp" />
     <ClCompile Include="excrypt_rc4.c" />
     <ClCompile Include="excrypt_rotsum.c" />
     <ClCompile Include="excrypt_sha.c" />

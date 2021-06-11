@@ -52,24 +52,39 @@ typedef struct _EXCRYPT_RSAPUB_2048
 } EXCRYPT_RSAPUB_2048;
 static_assert(sizeof(EXCRYPT_RSAPUB_2048) == 0x110, "sizeof(EXCRYPT_RSAPUB_2048) != 0x110");
 
+typedef struct _EXCRYPT_RSAPRV_1024
+{
+  EXCRYPT_RSA rsa;
+  uint64_t modulus[16];
+  uint64_t prime1[8];
+  uint64_t prime2[8];
+  uint64_t exponent1[8];
+  uint64_t exponent2[8];
+  uint64_t coefficient[8];
+  uint64_t priv_exponent[16];
+} EXCRYPT_RSAPRV_1024;
+
 // excrypt_bn_sig.c
 void ExCryptBnQwBeSigFormat(EXCRYPT_SIG* sig, const uint8_t* hash, const uint8_t* salt);
 //BOOL ExCryptBnQwBeSigCreate(EXCRYPT_SIG* sig, const uint8_t* hash, const uint8_t* salt, const EXCRYPT_RSA* privkey);
 BOOL ExCryptBnQwBeSigVerify(EXCRYPT_SIG* sig, const uint8_t* hash, const uint8_t* salt, const EXCRYPT_RSA* pubkey);
 int32_t ExCryptBnQwBeSigDifference(EXCRYPT_SIG* sig, const uint8_t* hash, const uint8_t* salt, const EXCRYPT_RSA* pubkey);
 
-// excrypt_bn_key.c
+// excrypt_bn_key.cpp
 
 // (not from XeCrypt)
 // Swaps an EXCRYPT_RSA key from Xbox360 format to a format usable with PC ExCrypt functions.
-// TODO: remove this - our funcs should be handling conversions automatically
+// TODO: remove this - our funcs should be handling conversions automatically!
 void ExCryptBn_BeToLeKey(EXCRYPT_RSA* key, const uint8_t* input, uint32_t input_size);
 
-// excrypt_bn_rsa.c
-BOOL ExCryptBnQwNeRsaPubCrypt(const uint64_t* input, uint64_t* output, EXCRYPT_RSA* key);
-
+// excrypt_bn_rsa.cpp
 // TODO: investigate PrivExp/'D' constant, XeCrypt struct doesn't provide it, but pretty much all RSA codebases need it
-// We only have the one for 1024-bit keys atm though I believe, could it be calculated from the other priv numbers?
-//BOOL ExCryptBnQwNeRsaPrvCrypt(const uint64_t* input, uint64_t* output, EXCRYPT_RSA* key); 
+// We only have one for 1024-bit numbers atm, should be some way to use ModInv to calculate it though...
+BOOL ExCryptBnQwNeRsaPrvCrypt(const uint64_t* input, uint64_t* output, const EXCRYPT_RSA* key);
+BOOL ExCryptBnQwNeRsaPubCrypt(const uint64_t* input, uint64_t* output, const EXCRYPT_RSA* key);
+
+// excrypt_bn_pkcs1.cpp
+void ExCryptBnDwLePkcs1Format(const uint8_t* hash, uint32_t format, uint8_t* output_sig, uint32_t output_sig_size);
+BOOL ExCryptBnDwLePkcs1Verify(const uint8_t* hash, const uint8_t* input_sig, uint32_t input_sig_size);
 
 //BOOL ExCryptBnQwNeRsaKeyGen(uint32_t num_bits, uint32_t public_exponent, EXCRYPT_RSA* pub_key, EXCRYPT_RSA* priv_key);
