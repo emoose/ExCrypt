@@ -28,7 +28,7 @@ typedef int BOOL;
 #include "excrypt_rotsum.h"
 #include "excrypt_sha.h"
 #include "excrypt_sha2.h"
-
+#include "exkeys.h"
 #ifdef __cplusplus
 }
 #endif

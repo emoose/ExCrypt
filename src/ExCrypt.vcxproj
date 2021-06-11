@@ -136,6 +136,7 @@
     <ClInclude Include="excrypt_rotsum.h" />
     <ClInclude Include="excrypt_sha.h" />
     <ClInclude Include="excrypt_sha2.h" />
+    <ClInclude Include="exkeys.h" />
     <ClInclude Include="fp61.hpp" />
     <ClInclude Include="rijndael.h" />
   </ItemGroup>
@@ -156,6 +157,7 @@
     <ClCompile Include="excrypt_rotsum.c" />
     <ClCompile Include="excrypt_sha.c" />
     <ClCompile Include="excrypt_sha2.c" />
+    <ClCompile Include="exkeys.cpp" />
     <ClCompile Include="rijndael.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
