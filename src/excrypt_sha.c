@@ -218,10 +218,11 @@ void ExCryptHmacShaUpdate(EXCRYPT_HMACSHA_STATE* state, const uint8_t* input, ui
 
 void ExCryptHmacShaFinal(EXCRYPT_HMACSHA_STATE* state, uint8_t* output, uint32_t output_size)
 {
-  ExCryptShaFinal(&state->ShaState[0], 0, 0);
+  uint8_t hash[0x14];
+  ExCryptShaFinal(&state->ShaState[0], hash, 0x14);
 
   // updates second SHA1 state with result from first SHA1
-  ExCryptShaUpdate(&state->ShaState[1], (const uint8_t*)state->ShaState[0].state, 0x14);
+  ExCryptShaUpdate(&state->ShaState[1], hash, 0x14);
 
   ExCryptShaFinal(&state->ShaState[1], output, output_size);
 }
