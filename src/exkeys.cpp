@@ -5,65 +5,65 @@
 #include "excrypt.h"
 
 std::map<uint32_t, std::tuple<uint32_t, uint32_t>> kExKeyProperties = {
-	{ 0x00, { 0x8, 0x1 } },
-	{ 0x01, { 0x9, 0x1 } },
-	{ 0x02, { 0xA, 0x1 } },
-	{ 0x03, { 0xB, 0x1 } },
-	{ 0x04, { 0xC, 0x2 } },
-	{ 0x05, { 0xE, 0x2 } },
-	{ 0x06, { 0x10, 0x4 } },
-	{ 0x07, { 0x14, 0x4 } },
-	{ 0x08, { 0x18, 0x4 } },
-	{ 0x09, { 0x1C, 0x4 } },
-	{ 0x0A, { 0x20, 0x8 } },
-	{ 0x0B, { 0x28, 0x8 } },
-	{ 0x0C, { 0x30, 0x8 } },
-	{ 0x0D, { 0x38, 0x8 } },
-	{ 0x0E, { 0x40, 0x10 } },
-	{ 0x0F, { 0x50, 0x10 } },
-	{ 0x10, { 0x60, 0x10 } },
-	{ 0x11, { 0x70, 0x10 } },
-	{ 0x12, { 0x80, 0x10 } },
-	{ 0x13, { 0x90, 0x10 } },
-	{ 0x14, { 0xA0, 0xC } },
-	{ 0x15, { 0xAC, 0xC } },
-	{ 0x16, { 0xB8, 0x2 } },
+	{ XEKEY_MANUFACTURING_MODE, { 0x8, 0x1 } },
+	{ XEKEY_ALTERNATE_KEY_VAULT, { 0x9, 0x1 } },
+	{ XEKEY_RESTRICTED_PRIVILEGES_FLAGS, { 0xA, 0x1 } },
+	{ XEKEY_RESERVED_BYTE3, { 0xB, 0x1 } },
+	{ XEKEY_ODD_FEATURES, { 0xC, 0x2 } },
+	{ XEKEY_ODD_AUTHTYPE, { 0xE, 0x2 } },
+	{ XEKEY_RESTRICTED_HVEXT_LOADER, { 0x10, 0x4 } },
+	{ XEKEY_POLICY_FLASH_SIZE, { 0x14, 0x4 } },
+	{ XEKEY_POLICY_BUILTIN_USBMU_SIZE, { 0x18, 0x4 } },
+	{ XEKEY_RESERVED_DWORD4, { 0x1C, 0x4 } },
+	{ XEKEY_RESTRICTED_PRIVILEGES, { 0x20, 0x8 } },
+	{ XEKEY_RESERVED_QWORD2, { 0x28, 0x8 } },
+	{ XEKEY_RESERVED_QWORD3, { 0x30, 0x8 } },
+	{ XEKEY_RESERVED_QWORD4, { 0x38, 0x8 } },
+	{ XEKEY_RESERVED_KEY1, { 0x40, 0x10 } },
+	{ XEKEY_RESERVED_KEY2, { 0x50, 0x10 } },
+	{ XEKEY_RESERVED_KEY3, { 0x60, 0x10 } },
+	{ XEKEY_RESERVED_KEY4, { 0x70, 0x10 } },
+	{ XEKEY_RESERVED_RANDOM_KEY1, { 0x80, 0x10 } },
+	{ XEKEY_RESERVED_RANDOM_KEY2, { 0x90, 0x10 } },
+	{ XEKEY_CONSOLE_SERIAL_NUMBER, { 0xA0, 0xC } },
+	{ XEKEY_MOBO_SERIAL_NUMBER, { 0xAC, 0xC } },
+	{ XEKEY_GAME_REGION, { 0xB8, 0x2 } },
 	// 6 bytes padding
-	{ 0x17, { 0xC0, 0x10 } },
-	{ 0x18, { 0xD0, 0x10 } },
-	{ 0x19, { 0xE0, 0x10 } },
-	{ 0x1A, { 0xF0, 0x10 } },
-	{ 0x1B, { 0x100, 0x18 } },
-	{ 0x1C, { 0x118, 0x10 } },
-	{ 0x1D, { 0x128, 0x10 } },
-	{ 0x1E, { 0x138, 0x10 } },
-	{ 0x1F, { 0x148, 0x10 } },
-	{ 0x20, { 0x158, 0x10 } },
-	{ 0x21, { 0x168, 0x10 } },
-	{ 0x22, { 0x178, 0x10 } },
-	{ 0x23, { 0x188, 0x10 } },
-	{ 0x24, { 0x198, 0x10 } },
-	{ 0x25, { 0x1A8, 0x10 } },
-	{ 0x26, { 0x1B8, 0x10 } },
-	{ 0x27, { 0x1C8, 0x10 } },
-	{ 0x28, { 0x1D8, 0x10 } },
-	{ 0x29, { 0x1E8, 0x10 } },
-	{ 0x2A, { 0x1F8, 0x10 } },
-	{ 0x2B, { 0x208, 0x10 } },
-	{ 0x2C, { 0x218, 0x10 } },
-	{ 0x2D, { 0x228, 0x10 } },
-	{ 0x2E, { 0x238, 0x10 } },
-	{ 0x2F, { 0x248, 0x10 } },
-	{ 0x30, { 0x258, 0x10 } },
-	{ 0x31, { 0x268, 0x10 } },
-	{ 0x32, { 0x278, 0x10 } },
-	{ 0x33, { 0x288, 0x1D0 } },
-	{ 0x34, { 0x458, 0x390 } },
-	{ 0x35, { 0x7E8, 0x1D0 } },
-	{ 0x36, { 0x9B8, 0x1A8 } },
-	{ 0x37, { 0xB60, 0x1288 } },
-	{ 0x44, { 0x1DF8, 0x100 } },
-	{ 0x38, { 0x1EE8, 0x2108 } },
+	{ XEKEY_CONSOLE_OBFUSCATION_KEY, { 0xC0, 0x10 } },
+	{ XEKEY_KEY_OBFUSCATION_KEY, { 0xD0, 0x10 } },
+	{ XEKEY_ROAMABLE_OBFUSCATION_KEY, { 0xE0, 0x10 } },
+	{ XEKEY_DVD_KEY, { 0xF0, 0x10 } },
+	{ XEKEY_PRIMARY_ACTIVATION_KEY, { 0x100, 0x18 } },
+	{ XEKEY_SECONDARY_ACTIVATION_KEY, { 0x118, 0x10 } },
+	{ XEKEY_GLOBAL_DEVICE_2DES_KEY1, { 0x128, 0x10 } },
+	{ XEKEY_GLOBAL_DEVICE_2DES_KEY2, { 0x138, 0x10 } },
+	{ XEKEY_WIRELESS_CONTROLLER_MS_2DES_KEY1, { 0x148, 0x10 } },
+	{ XEKEY_WIRELESS_CONTROLLER_MS_2DES_KEY2, { 0x158, 0x10 } },
+	{ XEKEY_WIRED_WEBCAM_MS_2DES_KEY1, { 0x168, 0x10 } },
+	{ XEKEY_WIRED_WEBCAM_MS_2DES_KEY2, { 0x178, 0x10 } },
+	{ XEKEY_WIRED_CONTROLLER_MS_2DES_KEY1, { 0x188, 0x10 } },
+	{ XEKEY_WIRED_CONTROLLER_MS_2DES_KEY2, { 0x198, 0x10 } },
+	{ XEKEY_MEMORY_UNIT_MS_2DES_KEY1, { 0x1A8, 0x10 } },
+	{ XEKEY_MEMORY_UNIT_MS_2DES_KEY2, { 0x1B8, 0x10 } },
+	{ XEKEY_OTHER_XSM3_DEVICE_MS_2DES_KEY1, { 0x1C8, 0x10 } },
+	{ XEKEY_OTHER_XSM3_DEVICE_MS_2DES_KEY2, { 0x1D8, 0x10 } },
+	{ XEKEY_WIRELESS_CONTROLLER_3P_2DES_KEY1, { 0x1E8, 0x10 } },
+	{ XEKEY_WIRELESS_CONTROLLER_3P_2DES_KEY2, { 0x1F8, 0x10 } },
+	{ XEKEY_WIRED_WEBCAM_3P_2DES_KEY1, { 0x208, 0x10 } },
+	{ XEKEY_WIRED_WEBCAM_3P_2DES_KEY2, { 0x218, 0x10 } },
+	{ XEKEY_WIRED_CONTROLLER_3P_2DES_KEY1, { 0x228, 0x10 } },
+	{ XEKEY_WIRED_CONTROLLER_3P_2DES_KEY2, { 0x238, 0x10 } },
+	{ XEKEY_MEMORY_UNIT_3P_2DES_KEY1, { 0x248, 0x10 } },
+	{ XEKEY_MEMORY_UNIT_3P_2DES_KEY2, { 0x258, 0x10 } },
+	{ XEKEY_OTHER_XSM3_DEVICE_3P_2DES_KEY1, { 0x268, 0x10 } },
+	{ XEKEY_OTHER_XSM3_DEVICE_3P_2DES_KEY2, { 0x278, 0x10 } },
+	{ XEKEY_CONSOLE_PRIVATE_KEY, { 0x288, 0x1D0 } },
+	{ XEKEY_XEIKA_PRIVATE_KEY, { 0x458, 0x390 } },
+	{ XEKEY_CARDEA_PRIVATE_KEY, { 0x7E8, 0x1D0 } },
+	{ XEKEY_CONSOLE_CERTIFICATE, { 0x9B8, 0x1A8 } },
+	{ XEKEY_XEIKA_CERTIFICATE, { 0xB60, 0x1288 } },
+	{ XEKEY_SPECIAL_KEY_VAULT_SIGNATURE, { 0x1DF8, 0x100 } },
+	{ XEKEY_CARDEA_CERTIFICATE, { 0x1EE8, 0x2108 } },
 };
 
 uint8_t kRoamableObfuscationKey_Retail[0x10] = 
@@ -80,7 +80,40 @@ std::vector<uint8_t> ExKeyVault;
 extern "C"
 {
 
-BOOL ExKeysLoadKeyVault(const char* filepath)
+BOOL ExKeysKeyVaultLoaded()
+{
+	return !ExKeyVault.empty();
+}
+
+void ExKeysKeyVaultSetup()
+{
+	// ROAMABLE_OBFUSCATION_KEY doesn't seem to be stored in the keyvault, is generated at runtime/stored in HV?
+	auto* roamable_key = ExKeysGetKeyPtr(XEKEY_ROAMABLE_OBFUSCATION_KEY);
+	if (ExKeysGetConsoleType() == 2)
+		std::copy_n(kRoamableObfuscationKey_Retail, 0x10, roamable_key);
+	else
+		std::copy_n(kRoamableObfuscationKey_Devkit, 0x10, roamable_key);
+}
+
+BOOL ExKeysLoadKeyVault(const uint8_t* decrypted_kv, uint32_t length)
+{
+	if (length < 0x3FF0)
+		return false;
+
+	uint32_t offset = 0;
+	if (length >= 0x4000)
+		offset = 0x10; // skip over digest
+
+	ExKeyVault.resize(length - offset);
+
+	std::copy_n(decrypted_kv + offset, length - offset, ExKeyVault.data());
+
+	ExKeysKeyVaultSetup();
+
+	return true;
+}
+
+BOOL ExKeysLoadKeyVaultFromPath(const char* filepath)
 {
 	FILE* file;
 	if (fopen_s(&file, filepath, "rb") != 0)
@@ -89,6 +122,12 @@ BOOL ExKeysLoadKeyVault(const char* filepath)
 	fseek(file, 0, SEEK_END);
 	auto filesize = ftell(file);
 	fseek(file, 0, SEEK_SET);
+
+	if (filesize < 0x3FF0)
+	{
+		fclose(file);
+		return false;
+	}
 
 	if (filesize >= 0x4000)
 	{
@@ -102,12 +141,7 @@ BOOL ExKeysLoadKeyVault(const char* filepath)
 	fread(ExKeyVault.data(), 1, filesize, file);
 	fclose(file);
 
-	// ROAMABLE_OBFUSCATION_KEY doesn't seem to be stored in the keyvault, is generated at runtime/stored in HV?
-	auto* roamable_key = ExKeysGetKeyPtr(XEKEY_ROAMABLE_OBFUSCATION_KEY);
-	if (ExKeysGetConsoleType() == 2)
-		std::memcpy(roamable_key, kRoamableObfuscationKey_Retail, 0x10);
-	else
-		std::memcpy(roamable_key, kRoamableObfuscationKey_Devkit, 0x10);
+	ExKeysKeyVaultSetup();
 
 	return true;
 }
@@ -138,7 +172,7 @@ BOOL ExKeysGetKey(uint32_t key_idx, uint8_t* output, uint32_t* output_size)
 	if (!output)
 		return true;
 
-	std::memcpy(output, ExKeyVault.data() + key_offset, key_size);
+	std::copy_n(ExKeyVault.data() + key_offset, key_size, output);
 
 	return true;
 }
@@ -177,7 +211,7 @@ uint32_t ExKeysGetConsoleId(uint8_t* raw_bytes, char* hex_string)
 	uint8_t* console_cert = ExKeysGetKeyPtr(XEKEY_CONSOLE_CERTIFICATE);
 
 	if (raw_bytes) {
-		std::memcpy(raw_bytes, console_cert + 2, 5);
+		std::copy_n(console_cert + 2, 5, raw_bytes);
 	}
 	if (hex_string) {
 		// TODO
@@ -189,7 +223,7 @@ uint32_t ExKeysGetConsoleType()
 {
 	uint8_t* console_cert = ExKeysGetKeyPtr(XEKEY_CONSOLE_CERTIFICATE);
 
-	return *(uint32_t*)(console_cert + 0x18);
+	return _byteswap_ulong(*(uint32_t*)(console_cert + 0x18));
 }
 
 uint32_t ExKeysGetConsolePrivateKey(EXCRYPT_RSAPRV_1024* output)
@@ -215,6 +249,7 @@ BOOL ExKeysQwNeRsaPrvCrypt(uint32_t key_idx, const uint64_t* input, uint64_t* ou
 	return ExCryptBnQwNeRsaPrvCrypt(input, output, (EXCRYPT_RSA*)key_ptr);
 }
 
+// Signs the given hash with the loaded keyvaults private-key, and writes out console cert + signature to output_cert_sig
 BOOL ExKeysConsolePrivateKeySign(const uint8_t* hash, uint8_t* output_cert_sig)
 {
 	uint64_t sig_buf[0x10];
@@ -294,9 +329,9 @@ uint32_t ExKeysHmacSha(uint32_t key_idx,
 	return 0; // TODO: X_STATUS_SUCCESS
 }
 
-uint32_t ExKeysObfuscate(bool roaming, const uint8_t* input, uint32_t input_size, uint8_t* output, uint32_t* output_size)
+uint32_t ExKeysObfuscate(BOOL roaming, const uint8_t* input, uint32_t input_size, uint8_t* output, uint32_t* output_size)
 {
-	std::memcpy(output + 0x18, input, input_size);
+	std::copy_n(input, input_size, output + 0x18);
 	*output_size = input_size + 0x18;
 
 	//TODO: set random nonce
@@ -317,16 +352,18 @@ uint32_t ExKeysObfuscate(bool roaming, const uint8_t* input, uint32_t input_size
 	return result; // TODO: X_STATUS_SUCCESS
 }
 
-BOOL ExKeysUnobfuscate(bool roaming, const uint8_t* input, uint32_t input_size, uint8_t* output, uint32_t* output_size)
+
+
+BOOL ExKeysUnobfuscate(BOOL roaming, const uint8_t* input, uint32_t input_size, uint8_t* output, uint32_t* output_size)
 {
 	if (input_size < 0x18)
 		return false;
 
-	uint8_t buf1[0x20];
-	std::memcpy(buf1, input, 0x18);
+	uint8_t buf1[0x18];
+	std::copy_n(input, 0x18, buf1);
 
 	*output_size = input_size - 0x18;
-	std::memcpy(output, input + 0x18, *output_size);
+	std::copy_n(input + 0x18, *output_size, output);
 
 	uint32_t key_idx = roaming ? XEKEY_ROAMABLE_OBFUSCATION_KEY : XEKEY_CONSOLE_OBFUSCATION_KEY;
 

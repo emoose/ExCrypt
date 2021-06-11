@@ -89,9 +89,12 @@ enum XeKey
 	XEKEY_SECURED_DATA_LIMIT = 0x2000,
 };
 
-BOOL ExKeysLoadKeyVault(const char* filepath);
-BOOL ExKeysIsKeySupported(uint32_t key_idx);
+BOOL ExKeysKeyVaultLoaded();
 
+BOOL ExKeysLoadKeyVault(const uint8_t* decrypted_kv, uint32_t length);
+BOOL ExKeysLoadKeyVaultFromPath(const char* filepath);
+
+BOOL ExKeysIsKeySupported(uint32_t key_idx);
 BOOL ExKeysGetKey(uint32_t key_idx, uint8_t* output, uint32_t* output_size);
 uint8_t* ExKeysGetKeyPtr(uint32_t key_idx);
 uint32_t ExKeysGetKeyProperties(uint32_t key_idx);
@@ -117,5 +120,5 @@ uint32_t ExKeysHmacSha(uint32_t key_idx,
 	const uint8_t* input3, uint32_t input3_size,
 	uint8_t* output, uint32_t output_size);
 
-uint32_t ExKeysObfuscate(bool roaming, const uint8_t* input, uint32_t input_size, uint8_t* output, uint32_t* output_size);
-BOOL ExKeysUnobfuscate(bool roaming, const uint8_t* input, uint32_t input_size, uint8_t* output, uint32_t* output_size);
+uint32_t ExKeysObfuscate(BOOL roaming, const uint8_t* input, uint32_t input_size, uint8_t* output, uint32_t* output_size);
+BOOL ExKeysUnobfuscate(BOOL roaming, const uint8_t* input, uint32_t input_size, uint8_t* output, uint32_t* output_size);
