@@ -206,7 +206,7 @@ uint32_t ExKeysGetConsoleCertificate(uint8_t* output)
 	return 0;
 }
 
-uint32_t ExKeysGetConsoleId(uint8_t* raw_bytes, char* hex_string)
+uint32_t ExKeysGetConsoleID(uint8_t* raw_bytes, char* hex_string)
 {
 	uint8_t* console_cert = ExKeysGetKeyPtr(XEKEY_CONSOLE_CERTIFICATE);
 
@@ -334,11 +334,11 @@ uint32_t ExKeysObfuscate(BOOL roaming, const uint8_t* input, uint32_t input_size
 	std::copy_n(input, input_size, output + 0x18);
 	*output_size = input_size + 0x18;
 
-	//TODO: set random nonce
+	//TODO: set random nonce/confounder
 	//ExCryptRandom(output + 0x10, 8);
 	std::memset(output + 0x10, 0xBB, 8);
 
-	uint32_t key_idx = roaming ? XEKEY_ROAMABLE_OBFUSCATION_KEY : XEKEY_CONSOLE_OBFUSCATION_KEY;
+	uint32_t key_idx = roaming ? uint32_t(XEKEY_ROAMABLE_OBFUSCATION_KEY) : uint32_t(XEKEY_CONSOLE_OBFUSCATION_KEY);
 
 	auto result = ExKeysHmacSha(key_idx, output + 0x10, *output_size - 0x10, nullptr, 0, nullptr, 0, output, 0x10);
 	if (result < 0)
@@ -352,9 +352,7 @@ uint32_t ExKeysObfuscate(BOOL roaming, const uint8_t* input, uint32_t input_size
 	return result; // TODO: X_STATUS_SUCCESS
 }
 
-
-
-BOOL ExKeysUnobfuscate(BOOL roaming, const uint8_t* input, uint32_t input_size, uint8_t* output, uint32_t* output_size)
+BOOL ExKeysUnObfuscate(BOOL roaming, const uint8_t* input, uint32_t input_size, uint8_t* output, uint32_t* output_size)
 {
 	if (input_size < 0x18)
 		return false;
@@ -365,7 +363,7 @@ BOOL ExKeysUnobfuscate(BOOL roaming, const uint8_t* input, uint32_t input_size, 
 	*output_size = input_size - 0x18;
 	std::copy_n(input + 0x18, *output_size, output);
 
-	uint32_t key_idx = roaming ? XEKEY_ROAMABLE_OBFUSCATION_KEY : XEKEY_CONSOLE_OBFUSCATION_KEY;
+	uint32_t key_idx = roaming ? uint32_t(XEKEY_ROAMABLE_OBFUSCATION_KEY) : uint32_t(XEKEY_CONSOLE_OBFUSCATION_KEY);
 
 	uint8_t key[0x10];
 	auto result = ExKeysHmacSha(key_idx, buf1, 0x10, nullptr, 0, nullptr, 0, key, 0x10);
