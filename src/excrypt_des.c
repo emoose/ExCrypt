@@ -174,13 +174,13 @@ void ExCryptDes3Ecb(const EXCRYPT_DES3_STATE* state, const uint8_t* input, uint8
   if (encrypt)
   {
     ExCryptDesEcb(&state->des_state[0], input, output, encrypt);
-    ExCryptDesEcb(&state->des_state[1], output, output, encrypt);
+    ExCryptDesEcb(&state->des_state[1], output, output, !encrypt);
     ExCryptDesEcb(&state->des_state[2], output, output, encrypt);
   }
   else
   {
     ExCryptDesEcb(&state->des_state[2], input, output, encrypt);
-    ExCryptDesEcb(&state->des_state[1], output, output, encrypt);
+    ExCryptDesEcb(&state->des_state[1], output, output, !encrypt);
     ExCryptDesEcb(&state->des_state[0], output, output, encrypt);
   }
 }
