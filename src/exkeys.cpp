@@ -66,6 +66,8 @@ std::map<uint32_t, std::tuple<uint32_t, uint32_t>> kExKeyProperties = {
 	{ XEKEY_CARDEA_CERTIFICATE, { 0x1EE8, 0x2108 } },
 };
 
+std::map<uint32_t, std::vector<uint8_t>> ExImportedKeys;
+
 uint8_t kRoamableObfuscationKey_Retail[0x10] = 
 { 
 	0xE1, 0xBC, 0x15, 0x9C, 0x73, 0xB1, 0xEA, 0xE9, 0xAB, 0x31, 0x70, 0xF3, 0xAD, 0x47, 0xEB, 0xF3
@@ -143,6 +145,14 @@ BOOL ExKeysLoadKeyVaultFromPath(const char* filepath)
 
 	ExKeysKeyVaultSetup();
 
+	return true;
+}
+
+BOOL ExKeysImportKey(uint32_t key_idx, uint8_t* input, uint32_t size) {
+	std::vector<uint8_t> key_vector;
+	key_vector.resize(size);
+	memcpy(key_vector.data(), input, size);
+	ExImportedKeys.insert({ key_idx, key_vector });
 	return true;
 }
 
@@ -267,19 +277,57 @@ BOOL ExKeysConsolePrivateKeySign(const uint8_t* hash, uint8_t* output_cert_sig)
 
 BOOL ExKeysPkcs1Verify(const uint8_t* hash, const uint8_t* input_sig, EXCRYPT_RSA* key)
 {
-	uint64_t temp_sig[0x10];
+	uint64_t temp_sig[0x20];
 
 	uint32_t key_digits = _byteswap_ulong(key->num_digits);
 	uint32_t modulus_size = key_digits * 8;
 	if (modulus_size > 0x200)
 		return false;
 
-	ExCryptBnQw_SwapDwQwLeBe((uint64_t*)input_sig, temp_sig, 0x10);
+	ExCryptBnQw_SwapDwQwLeBe((uint64_t*)input_sig, temp_sig, key_digits);
 	if (!ExCryptBnQwNeRsaPubCrypt(temp_sig, temp_sig, key))
 		return false;
 
-	ExCryptBnQw_SwapDwQwLeBe(temp_sig, temp_sig, 0x10);
-	return ExCryptBnDwLePkcs1Verify(hash, (uint8_t*)temp_sig, 0x10 * 8);
+	ExCryptBnQw_SwapDwQwLeBe(temp_sig, temp_sig, key_digits);
+	return ExCryptBnDwLePkcs1Verify(hash, (uint8_t*)temp_sig, modulus_size);
+}
+
+// Verifies that the given hash was signed by the given console certificate, and that the console certificate was signed by the master key.
+BOOL ExKeysConsoleSignatureVerification(const uint8_t* hash, uint8_t* input_signature, int32_t *compare_result)
+{
+	uint32_t master_key_size = 0x110;
+	uint8_t our_console_cert[0x1A8];
+	uint8_t master_key[0x110];
+	EXCRYPT_RSAPUB_1024 console_public_key;
+
+	ExKeysGetConsoleCertificate(our_console_cert);
+
+	int32_t diff = ExCryptMemDiff(our_console_cert, input_signature, 0x1A8);
+	if (compare_result != NULL)
+		*compare_result = diff;
+
+	//ExKeysGetKey(XEKEY_CONSTANT_MASTER_KEY, master_key, &master_key_size);
+	if (ExImportedKeys.count(XEKEY_CONSTANT_MASTER_KEY) > 0)
+		memcpy(master_key, ExImportedKeys.at(XEKEY_CONSTANT_MASTER_KEY).data(), master_key_size);
+	else
+		memset(master_key, 0, 0x110);
+
+	if (master_key_size == 0x110 && _byteswap_ulong(*(uint32_t*)master_key) == 0x20) {
+		// Validate the input console certificate against the master public key.
+		uint8_t cert_checksum[0x14];
+		ExCryptSha(input_signature, 0xA8, NULL, 0, NULL, 0, cert_checksum, 0x14);
+		if (ExKeysPkcs1Verify(cert_checksum, input_signature + 0xA8, (EXCRYPT_RSA*)master_key)) {
+			// The certificate doesn't have the public key size - the real function does this stuff, too.
+			console_public_key.rsa.num_digits = _byteswap_ulong(0x10);
+			console_public_key.rsa.pub_exponent = *(uint32_t*)(input_signature + 0x24);
+			memcpy(console_public_key.modulus, input_signature + 0x28, sizeof(console_public_key.modulus));
+			// Validate the input hash against the provided signatuer.
+			if (ExKeysPkcs1Verify(hash, input_signature + 0x1A8, &console_public_key.rsa))
+				return true;
+		}
+	}
+
+	return false;
 }
 
 uint32_t ExKeysObscureKey(const uint8_t* input, uint8_t* output)

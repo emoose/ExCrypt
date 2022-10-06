@@ -93,6 +93,7 @@ BOOL ExKeysKeyVaultLoaded();
 
 BOOL ExKeysLoadKeyVault(const uint8_t* decrypted_kv, uint32_t length);
 BOOL ExKeysLoadKeyVaultFromPath(const char* filepath);
+BOOL ExKeysImportKey(uint32_t key_idx, uint8_t* input, uint32_t size);
 
 BOOL ExKeysIsKeySupported(uint32_t key_idx);
 BOOL ExKeysGetKey(uint32_t key_idx, uint8_t* output, uint32_t* output_size);
@@ -106,6 +107,7 @@ uint32_t ExKeysGetConsolePrivateKey(EXCRYPT_RSAPRV_1024* output);
 
 BOOL ExKeysQwNeRsaPrvCrypt(uint32_t key_idx, const uint64_t* input, uint64_t* output);
 BOOL ExKeysConsolePrivateKeySign(const uint8_t* hash, uint8_t* output_cert_sig);
+BOOL ExKeysConsoleSignatureVerification(const uint8_t* hash, uint8_t* input_signature, int32_t* compare_result);
 BOOL ExKeysPkcs1Verify(const uint8_t* hash, const uint8_t* input_sig, EXCRYPT_RSA* key);
 
 uint32_t ExKeysObscureKey(const uint8_t* input, uint8_t* output);
