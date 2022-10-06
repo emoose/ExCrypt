@@ -148,17 +148,19 @@ BOOL ExKeysLoadKeyVaultFromPath(const char* filepath)
 	return true;
 }
 
-BOOL ExKeysImportKey(uint32_t key_idx, uint8_t* input, uint32_t size) {
+BOOL ExKeysIsKeySupported(uint32_t key_idx)
+{
+	return (ExKeysKeyVaultLoaded() && kExKeyProperties.count(key_idx) > 0) || ExImportedKeys.count(key_idx) > 0;
+}
+
+BOOL ExKeysSetKey(uint32_t key_idx, const uint8_t* input, uint32_t size)
+{
 	std::vector<uint8_t> key_vector;
 	key_vector.resize(size);
 	memcpy(key_vector.data(), input, size);
-	ExImportedKeys.insert({ key_idx, key_vector });
-	return true;
-}
 
-BOOL ExKeysIsKeySupported(uint32_t key_idx)
-{
-	return kExKeyProperties.count(key_idx) > 0;
+	ExImportedKeys[key_idx] = key_vector;
+	return true;
 }
 
 BOOL ExKeysGetKey(uint32_t key_idx, uint8_t* output, uint32_t* output_size)
@@ -168,6 +170,18 @@ BOOL ExKeysGetKey(uint32_t key_idx, uint8_t* output, uint32_t* output_size)
 
 	if (!ExKeysIsKeySupported(key_idx))
 		return false;
+
+	// Imported version of key has priority over keyvault version
+	if (ExImportedKeys.count(key_idx) > 0)
+	{
+		std::vector<uint8_t>& imported_key = ExImportedKeys[key_idx];
+		if (output_size)
+			*output_size = uint32_t(imported_key.size());
+		if (output)
+			std::copy_n(imported_key.data(), imported_key.size(), output);
+
+		return true;
+	}
 
 	if (ExKeyVault.empty())
 		return false;
@@ -179,10 +193,8 @@ BOOL ExKeysGetKey(uint32_t key_idx, uint8_t* output, uint32_t* output_size)
 	if (output_size)
 		*output_size = key_size;
 
-	if (!output)
-		return true;
-
-	std::copy_n(ExKeyVault.data() + key_offset, key_size, output);
+	if (output)
+		std::copy_n(ExKeyVault.data() + key_offset, key_size, output);
 
 	return true;
 }
@@ -191,6 +203,9 @@ uint8_t* ExKeysGetKeyPtr(uint32_t key_idx)
 {
 	if (!ExKeysIsKeySupported(key_idx))
 		return nullptr;
+
+	if (ExImportedKeys.count(key_idx) > 0)
+		return ExImportedKeys[key_idx].data();
 
 	auto& key_info = kExKeyProperties.at(key_idx);
 	auto& key_offset = std::get<0>(key_info);
@@ -203,6 +218,9 @@ uint32_t ExKeysGetKeyProperties(uint32_t key_idx)
 {
 	if (!ExKeysIsKeySupported(key_idx))
 		return 0;
+
+	if (ExImportedKeys.count(key_idx))
+		return uint32_t(ExImportedKeys[key_idx].size());
 
 	auto& key_info = kExKeyProperties.at(key_idx);
 	auto& key_size = std::get<1>(key_info);
@@ -306,17 +324,16 @@ BOOL ExKeysConsoleSignatureVerification(const uint8_t* hash, uint8_t* input_sign
 	if (compare_result != NULL)
 		*compare_result = diff;
 
-	//ExKeysGetKey(XEKEY_CONSTANT_MASTER_KEY, master_key, &master_key_size);
-	if (ExImportedKeys.count(XEKEY_CONSTANT_MASTER_KEY) > 0)
-		memcpy(master_key, ExImportedKeys.at(XEKEY_CONSTANT_MASTER_KEY).data(), master_key_size);
-	else
+	if (!ExKeysGetKey(XEKEY_CONSTANT_MASTER_KEY, master_key, &master_key_size))
 		memset(master_key, 0, 0x110);
 
-	if (master_key_size == 0x110 && _byteswap_ulong(*(uint32_t*)master_key) == 0x20) {
+	if (master_key_size == 0x110 && _byteswap_ulong(*(uint32_t*)master_key) == 0x20)
+	{
 		// Validate the input console certificate against the master public key.
 		uint8_t cert_checksum[0x14];
 		ExCryptSha(input_signature, 0xA8, NULL, 0, NULL, 0, cert_checksum, 0x14);
-		if (ExKeysPkcs1Verify(cert_checksum, input_signature + 0xA8, (EXCRYPT_RSA*)master_key)) {
+		if (ExKeysPkcs1Verify(cert_checksum, input_signature + 0xA8, (EXCRYPT_RSA*)master_key))
+		{
 			// The certificate doesn't have the public key size - the real function does this stuff, too.
 			console_public_key.rsa.num_digits = _byteswap_ulong(0x10);
 			console_public_key.rsa.pub_exponent = *(uint32_t*)(input_signature + 0x24);

@@ -93,15 +93,16 @@ BOOL ExKeysKeyVaultLoaded();
 
 BOOL ExKeysLoadKeyVault(const uint8_t* decrypted_kv, uint32_t length);
 BOOL ExKeysLoadKeyVaultFromPath(const char* filepath);
-BOOL ExKeysImportKey(uint32_t key_idx, uint8_t* input, uint32_t size);
 
 BOOL ExKeysIsKeySupported(uint32_t key_idx);
+
+BOOL ExKeysSetKey(uint32_t key_idx, const uint8_t* input, uint32_t size);
 BOOL ExKeysGetKey(uint32_t key_idx, uint8_t* output, uint32_t* output_size);
 uint8_t* ExKeysGetKeyPtr(uint32_t key_idx);
 uint32_t ExKeysGetKeyProperties(uint32_t key_idx);
 
 uint32_t ExKeysGetConsoleCertificate(uint8_t* output);
-uint32_t ExKeysGetConsoleId(uint8_t* raw_bytes, char* hex_string);
+uint32_t ExKeysGetConsoleID(uint8_t* raw_bytes, char* hex_string);
 uint32_t ExKeysGetConsoleType();
 uint32_t ExKeysGetConsolePrivateKey(EXCRYPT_RSAPRV_1024* output);
 
@@ -123,4 +124,4 @@ uint32_t ExKeysHmacSha(uint32_t key_idx,
 	uint8_t* output, uint32_t output_size);
 
 uint32_t ExKeysObfuscate(BOOL roaming, const uint8_t* input, uint32_t input_size, uint8_t* output, uint32_t* output_size);
-BOOL ExKeysUnobfuscate(BOOL roaming, const uint8_t* input, uint32_t input_size, uint8_t* output, uint32_t* output_size);
+BOOL ExKeysUnObfuscate(BOOL roaming, const uint8_t* input, uint32_t input_size, uint8_t* output, uint32_t* output_size);
