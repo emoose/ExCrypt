@@ -237,12 +237,17 @@ uint32_t ExKeysGetConsoleCertificate(uint8_t* output)
 uint32_t ExKeysGetConsoleID(uint8_t* raw_bytes, char* hex_string)
 {
 	uint8_t* console_cert = ExKeysGetKeyPtr(XEKEY_CONSOLE_CERTIFICATE);
+	char string[0x10];
 
 	if (raw_bytes) {
 		std::copy_n(console_cert + 2, 5, raw_bytes);
 	}
 	if (hex_string) {
-		// TODO
+		uint64_t counter = 0;
+		for (int i = 0; i < 5; i++)
+			counter = console_cert[2 + i] + counter * 0x100;
+		sprintf_s(string, 0x10, "%011llu%llx", counter >> 4, counter & 0xF);
+		memcpy(hex_string, string, 0xC);
 	}
 	return 0;
 }
