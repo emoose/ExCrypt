@@ -38,28 +38,35 @@ BOOL ExCryptBnQwBeSigVerify(EXCRYPT_SIG* sig, const uint8_t* hash, const uint8_t
 
 int32_t ExCryptBnQwBeSigDifference(EXCRYPT_SIG* sig, const uint8_t* hash, const uint8_t* salt, const EXCRYPT_RSA* pubkey)
 {
-  if (pubkey->num_digits != 0x20 || (pubkey->pub_exponent != 3 && pubkey->pub_exponent != 0x10001))
+  uint32_t num_digits_swap = _byteswap_ulong(pubkey->num_digits);
+  uint32_t exp = _byteswap_ulong(pubkey->pub_exponent);
+
+  if (num_digits_swap != 0x20 || (exp != 3 && exp != 0x10001))
     return -1;
 
-  uint64_t* qwSig = (uint64_t*)sig;
   EXCRYPT_RSAPUB_2048* key = (EXCRYPT_RSAPUB_2048*)pubkey;
 
-  uint64_t inverse = ExCryptBnQwNeModInv(key->modulus[0]);
+  uint64_t modulus_swap[0x20];
+  for (int i = 0; i < 0x20; i++)
+      modulus_swap[i] = _byteswap_uint64(key->modulus[i]);
+
+  uint64_t* qwSig = (uint64_t*)sig;
+
+  uint64_t inverse = ExCryptBnQwNeModInv(modulus_swap[0]);
 
   uint64_t sig_copy[0x20];
   ExCryptBnQw_SwapDwQwLeBe(qwSig, qwSig, 32);
   ExCryptBnQw_Copy(qwSig, sig_copy, 32);
 
-  uint32_t exp = pubkey->pub_exponent;
   while (1)
   {
     exp >>= 1;
     if (!exp)
       break;
-    ExCryptBnQwNeModMul(sig_copy, sig_copy, sig_copy, inverse, key->modulus, 32);
+    ExCryptBnQwNeModMul(sig_copy, sig_copy, sig_copy, inverse, modulus_swap, 32);
     exp = exp;
   }
-  ExCryptBnQwNeModMul(sig_copy, qwSig, qwSig, inverse, key->modulus, 32);
+  ExCryptBnQwNeModMul(sig_copy, qwSig, qwSig, inverse, modulus_swap, 32);
   ExCryptBnQw_SwapDwQwLeBe(qwSig, qwSig, 32);
 
   ExCryptBnQwBeSigFormat((EXCRYPT_SIG*)&sig_copy, hash, salt);
