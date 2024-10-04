@@ -15,6 +15,11 @@ extern "C" {
 
 #define ROTL64(data, bits) (((data) << (bits)) | ((data) >> (64 - (bits))))
 
+#ifndef _MSC_VER
+#define _byteswap_ulong __builtin_bswap32
+#define _byteswap_uint64 __builtin_bswap64
+#endif
+
 typedef int BOOL;
 
 #include "excrypt_aes.h"

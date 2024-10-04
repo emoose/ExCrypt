@@ -27,7 +27,9 @@ typedef struct _EXCRYPT_SIG
   uint8_t hash[20]; // SHA1(sig[0:8] | salt | data-hash)
   uint8_t end; // 0xBC
 } EXCRYPT_SIG;
+#ifdef __cplusplus
 static_assert(sizeof(EXCRYPT_SIG) == 0x100, "sizeof(EXCRYPT_SIG) != 0x100");
+#endif
 
 // Base struct of all ExCrypt RSA keys
 typedef struct _EXCRYPT_RSA
@@ -36,21 +38,27 @@ typedef struct _EXCRYPT_RSA
   uint32_t pub_exponent;
   uint64_t reserved;
 } EXCRYPT_RSA;
+#ifdef __cplusplus
 static_assert(sizeof(EXCRYPT_RSA) == 0x10, "sizeof(EXCRYPT_RSA) != 0x100");
+#endif
 
 typedef struct _EXCRYPT_RSAPUB_1024
 {
   EXCRYPT_RSA rsa;
   uint64_t modulus[16];
 } EXCRYPT_RSAPUB_1024;
+#ifdef __cplusplus
 static_assert(sizeof(EXCRYPT_RSAPUB_1024) == 0x90, "sizeof(EXCRYPT_RSAPUB_1024) != 0x90");
+#endif
 
 typedef struct _EXCRYPT_RSAPUB_2048
 {
   EXCRYPT_RSA rsa;
   uint64_t modulus[32];
 } EXCRYPT_RSAPUB_2048;
+#ifdef __cplusplus
 static_assert(sizeof(EXCRYPT_RSAPUB_2048) == 0x110, "sizeof(EXCRYPT_RSAPUB_2048) != 0x110");
+#endif
 
 typedef struct _EXCRYPT_RSAPRV_1024
 {

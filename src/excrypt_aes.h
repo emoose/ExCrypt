@@ -5,7 +5,9 @@ typedef struct _EXCRYPT_AES_STATE
   uint8_t keytabenc[11][4][4];
   uint8_t keytabdec[11][4][4];
 } EXCRYPT_AES_STATE;
+#ifdef __cplusplus
 static_assert(sizeof(EXCRYPT_AES_STATE) == 0x160, "sizeof(EXCRYPT_AES_STATE) != 0x160");
+#endif
 
 #define AES_BLOCKLEN 16
 
@@ -20,7 +22,9 @@ typedef struct _EXCRYPT_AES_SCHEDULE
   uint8_t keytab[29][4][4];
   uint32_t num_rounds; // actual nr = num_rounds + 1
 } EXCRYPT_AES_SCHEDULE;
+#ifdef __cplusplus
 static_assert(sizeof(EXCRYPT_AES_SCHEDULE) == 0x1d4, "sizeof(EXCRYPT_AES_SCHEDULE) != 0x1d4");
+#endif
 
 void ExCryptAesCreateKeySchedule(const uint8_t* key, uint32_t key_size, EXCRYPT_AES_SCHEDULE* state);
 

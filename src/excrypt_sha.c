@@ -3,6 +3,10 @@
 
 #include "excrypt.h"
 
+#ifndef min
+#define min(a,b) ((a) < (b) ? (a) : (b))
+#endif
+
 // SHA1 code based on https://github.com/mohaps/TinySHA1
 
 void sha1_process_block(EXCRYPT_SHA_STATE* state)
