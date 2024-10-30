@@ -141,7 +141,7 @@ void ExCryptAesEcb(const EXCRYPT_AES_STATE* state, const uint8_t* input, uint8_t
   }
 }
 
-inline void xorWithIv(const uint8_t* input, uint8_t* output, const uint8_t* iv)
+void xorWithIv(const uint8_t* input, uint8_t* output, const uint8_t* iv)
 {
   for (uint32_t i = 0; i < AES_BLOCKLEN; i++)
   {
@@ -197,7 +197,7 @@ void ExCryptAesCbc(const EXCRYPT_AES_STATE* state, const uint8_t* input, uint32_
   }
 }
 
-inline unsigned long* aesschedule_dectable(EXCRYPT_AES_SCHEDULE* state)
+unsigned long* aesschedule_dectable(EXCRYPT_AES_SCHEDULE* state)
 {
   return (unsigned long*)&state->keytab[state->num_rounds + 1]; // dec table starts at last entry of enc table
 }
