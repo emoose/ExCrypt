@@ -1,14 +1,14 @@
 #ifndef H__RIJNDAEL
 #define H__RIJNDAEL
 
-int rijndaelSetupEncrypt(unsigned long* rk, const unsigned char* key,
-  int keybits);
-int rijndaelSetupDecrypt(unsigned long* rk, const unsigned char* key,
-  int keybits);
-void rijndaelEncrypt(const unsigned long* rk, int nrounds,
-  const unsigned char plaintext[16], unsigned char ciphertext[16]);
-void rijndaelDecrypt(const unsigned long* rk, int nrounds,
-  const unsigned char ciphertext[16], unsigned char plaintext[16]);
+#include <stdint.h>
+
+int rijndaelSetupEncrypt(uint32_t* rk, const uint8_t* key, int keybits);
+int rijndaelSetupDecrypt(uint32_t* rk, const uint8_t* key, int keybits);
+void rijndaelEncrypt(const uint32_t* rk, int nrounds,
+  const uint8_t plaintext[16], uint8_t ciphertext[16]);
+void rijndaelDecrypt(const uint32_t* rk, int nrounds,
+  const uint8_t ciphertext[16], uint8_t plaintext[16]);
 
 #define KEYLENGTH(keybits) ((keybits)/8)
 #define RKLENGTH(keybits)  ((keybits)/8+28)

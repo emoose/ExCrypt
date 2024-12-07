@@ -15,13 +15,13 @@
 #include "rijndael.h"
 
 // function signature shared between reference impl. and our AESNI versions
-typedef void(*rijndaelCrypt_fn)(const unsigned long*, int, const unsigned char*, unsigned char*);
+typedef void(*rijndaelCrypt_fn)(const uint32_t*, int, const uint8_t*, uint8_t*);
 
 rijndaelCrypt_fn AesEnc = rijndaelEncrypt;
 rijndaelCrypt_fn AesDec = rijndaelDecrypt;
 
 /* AESNI code based on https://gist.github.com/acapola/d5b940da024080dfaf5f */
-void rijndaelEncrypt_AESNI(const unsigned long* rk, int nrounds, const unsigned char* plaintext, unsigned char* ciphertext)
+void rijndaelEncrypt_AESNI(const uint32_t* rk, int nrounds, const uint8_t* plaintext, uint8_t* ciphertext)
 {
   __m128i block = _mm_loadu_si128((const __m128i*)plaintext);
   __m128i* enc_table = (__m128i*)rk;
@@ -41,7 +41,7 @@ void rijndaelEncrypt_AESNI(const unsigned long* rk, int nrounds, const unsigned 
   _mm_storeu_si128((__m128i*)ciphertext, block);
 }
 
-void rijndaelDecrypt_AESNI(const unsigned long* rk, int nrounds, const unsigned char* ciphertext, unsigned char* plaintext)
+void rijndaelDecrypt_AESNI(const uint32_t* rk, int nrounds, const uint8_t* ciphertext, uint8_t* plaintext)
 {
   __m128i block = _mm_loadu_si128((const __m128i*)ciphertext);
   __m128i* dec_table = (__m128i*)rk;
