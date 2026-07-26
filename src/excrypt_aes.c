@@ -1,12 +1,20 @@
 #include <string.h>
-#include <wmmintrin.h>  //for intrinsics for AES-NI
 
-#ifdef __WIN32
-#include <intrin.h> // cpuid
+// AES-NI (and the SSE intrinsics it relies on) are x86/x64 only. On other
+// architectures - e.g. AArch64 / Apple Silicon - none of the <wmmintrin.h>
+// machinery exists, so gate it out and fall back to the portable software
+// rijndael implementation below.
+#if defined(_M_X64) || defined(__x86_64__) || defined(__amd64__)
+#define EXCRYPT_AESNI
 #endif
-#ifdef __linux__
-#define __cpuid(out, infoType)\
-        asm("cpuid": "=a" (out[0]), "=b" (out[1]), "=c" (out[2]), "=d" (out[3]): "a" (infoType));
+
+#ifdef EXCRYPT_AESNI
+#include <wmmintrin.h> // intrinsics for AES-NI
+#if defined(_MSC_VER)
+#include <intrin.h> // __cpuid
+#else
+#include <cpuid.h> // __get_cpuid
+#endif
 #endif
 
 #include "excrypt.h"
@@ -20,6 +28,7 @@ typedef void(*rijndaelCrypt_fn)(const uint32_t*, int, const uint8_t*, uint8_t*);
 rijndaelCrypt_fn AesEnc = rijndaelEncrypt;
 rijndaelCrypt_fn AesDec = rijndaelDecrypt;
 
+#ifdef EXCRYPT_AESNI
 /* AESNI code based on https://gist.github.com/acapola/d5b940da024080dfaf5f */
 void rijndaelEncrypt_AESNI(const uint32_t* rk, int nrounds, const uint8_t* plaintext, uint8_t* ciphertext)
 {
@@ -70,16 +79,21 @@ static __m128i aes_128_key_expansion(__m128i key, __m128i keygened) {
   key = _mm_xor_si128(key, _mm_slli_si128(key, 4));
   return _mm_xor_si128(key, keygened);
 }
+#endif // EXCRYPT_AESNI
 
 static int aesni_supported = 0;
 int aesni_get_supported()
 {
-#ifndef _M_AMD64
-  return 0; // AES-NI only works properly in x64?
-#endif
+#ifdef EXCRYPT_AESNI
+  // query the AES-NI feature bit (CPUID.01H:ECX[25]) portably across compilers
+#if defined(_MSC_VER)
   int regs[4];
   __cpuid(regs, 1);
   aesni_supported = (regs[2] >> 25) & 1;
+#else
+  unsigned int eax, ebx, ecx, edx;
+  aesni_supported = __get_cpuid(1, &eax, &ebx, &ecx, &edx) ? ((ecx >> 25) & 1) : 0;
+#endif
 
   if (aesni_supported)
   {
@@ -87,10 +101,14 @@ int aesni_get_supported()
     AesDec = rijndaelDecrypt_AESNI;
   }
   return aesni_supported;
+#else
+  return 0; // no AES-NI outside x86/x64; use the software rijndael fallback
+#endif
 }
 
 void ExCryptAesKey(EXCRYPT_AES_STATE* state, const uint8_t* key)
 {
+#ifdef EXCRYPT_AESNI
   if (aesni_supported || aesni_get_supported())
   {
     __m128i* enc_table = (__m128i*)state->keytabenc;
@@ -120,13 +138,14 @@ void ExCryptAesKey(EXCRYPT_AES_STATE* state, const uint8_t* key)
     dec_table[8] = _mm_aesimc_si128(enc_table[2]);
     dec_table[9] = _mm_aesimc_si128(enc_table[1]);
     dec_table[10] = _mm_loadu_si128((const __m128i*)key);
+    return;
   }
-  else
-  {
-    rijndaelSetupEncrypt((uint32_t*)state->keytabenc, key, 128);
-    memcpy(state->keytabdec, state->keytabenc, sizeof(state->keytabdec));
-    rijndaelSetupDecrypt((uint32_t*)state->keytabdec, key, 128);
-  }
+#endif // EXCRYPT_AESNI
+
+  // software rijndael fallback (non-x86 targets, or x86 without AES-NI)
+  rijndaelSetupEncrypt((uint32_t*)state->keytabenc, key, 128);
+  memcpy(state->keytabdec, state->keytabenc, sizeof(state->keytabdec));
+  rijndaelSetupDecrypt((uint32_t*)state->keytabdec, key, 128);
 }
 
 void ExCryptAesEcb(const EXCRYPT_AES_STATE* state, const uint8_t* input, uint8_t* output, uint8_t encrypt)
