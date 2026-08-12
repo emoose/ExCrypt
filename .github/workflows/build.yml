@@ -1,0 +1,36 @@
+name: Cross-Platform Build
+
+on:
+  push:
+    branches: [ master, '*' ]
+  pull_request:
+    branches: [ master, '*' ]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v6
+
+    - name: Install dependencies on Ubuntu
+      if: runner.os == 'Linux'
+      run: sudo apt-get update && sudo apt-get install -y cmake g++
+
+    - name: Install dependencies on macOS
+      if: runner.os == 'macOS'
+      run: brew install cmake
+
+    # Windows comes with CMake and MSVC preinstalled in GitHub-hosted runners.
+
+    - name: Configure CMake
+      run: cmake -DCMAKE_BUILD_TYPE=Release -B build
+      shell: bash  # Ensures compatibility across all OSes
+
+    - name: Build
+      run: cmake --build build --config Release
+      shell: bash

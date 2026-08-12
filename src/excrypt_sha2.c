@@ -391,7 +391,7 @@ void ExCryptSha256Final(EXCRYPT_SHA256_STATE* state, uint8_t* output, uint32_t o
 
   /* extract the hash value as bytes in case the hash buffer is   */
   /* misaligned for 32-bit words                                  */
-  for (i = 0; i < min(output_size, 0x20); ++i)
+  for (i = 0; i < (output_size < 0x20 ? output_size : 0x20); ++i)
     output[i] = ((state->hash[i >> 2] >> (8 * (~i & 3))) & 0xff);
 }
 
@@ -693,7 +693,7 @@ void ExCryptSha512Final(EXCRYPT_SHA512_STATE* state, uint8_t* output, uint32_t o
 
   /* extract the hash value as bytes in case the hash buffer is   */
   /* misaligned for 32-bit words                                  */
-  for (i = 0; i < min(output_size, 0x40); ++i)
+  for (i = 0; i < (output_size < 0x40 ? output_size : 0x40); ++i)
     output[i] = ((state->hash[i >> 3] >> (8 * (~i & 7))) & 0xff);
 }
 

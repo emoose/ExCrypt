@@ -1,7 +1,10 @@
+#include <cstring>
 #include <memory>
 #include <map>
 #include <vector>
-
+#include <algorithm>
+#include <stdio.h>
+#include "portable_io.h"
 #include "excrypt.h"
 
 std::map<uint32_t, std::tuple<uint32_t, uint32_t>> kExKeyProperties = {
@@ -246,7 +249,7 @@ uint32_t ExKeysGetConsoleID(uint8_t* raw_bytes, char* hex_string)
 		uint64_t counter = 0;
 		for (int i = 0; i < 5; i++)
 			counter = console_cert[2 + i] + counter * 0x100;
-		sprintf_s(string, 0x10, "%011llu%llx", counter >> 4, counter & 0xF);
+		snprintf(string, 0x10, "%011llu%llx", counter >> 4, counter & 0xF);
 		memcpy(hex_string, string, 0xC);
 	}
 	return 0;
