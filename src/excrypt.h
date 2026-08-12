@@ -15,7 +15,7 @@ extern "C" {
 
 #define ROTL64(data, bits) (((data) << (bits)) | ((data) >> (64 - (bits))))
 
-#ifndef _MSC_VER
+#if !defined(_MSC_VER) && !defined(__MINGW32__) && !defined(__MINGW64__)
 #define _byteswap_ulong __builtin_bswap32
 #define _byteswap_uint64 __builtin_bswap64
 #endif
